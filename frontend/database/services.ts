@@ -31,6 +31,8 @@ export const getAllMembers = async (activeOnly: boolean = true): Promise<Member[
 
 export const getMemberById = async (id: number): Promise<Member | null> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return null;
+  
   const result = await db.getFirstAsync<Member>(
     'SELECT * FROM members WHERE id = ?',
     [id]
@@ -40,6 +42,8 @@ export const getMemberById = async (id: number): Promise<Member | null> => {
 
 export const createMember = async (member: Omit<Member, 'id' | 'created_at'>): Promise<number> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return 1;
+  
   const result = await db.runAsync(
     `INSERT INTO members (name, phone, whatsapp, facebook, room_info, avatar_base64, rent_amount, joined_date, is_active)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -60,6 +64,8 @@ export const createMember = async (member: Omit<Member, 'id' | 'created_at'>): P
 
 export const updateMember = async (id: number, member: Partial<Member>): Promise<void> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return;
+  
   const fields: string[] = [];
   const values: any[] = [];
   
@@ -81,12 +87,16 @@ export const updateMember = async (id: number, member: Partial<Member>): Promise
 
 export const deleteMember = async (id: number): Promise<void> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return;
+  
   await db.runAsync('UPDATE members SET is_active = 0 WHERE id = ?', [id]);
 };
 
 // BILL SERVICES
 export const getAllBills = async (month?: string): Promise<Bill[]> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return [];
+  
   let query = 'SELECT * FROM bills ORDER BY bill_date DESC';
   const params: any[] = [];
   
@@ -101,6 +111,8 @@ export const getAllBills = async (month?: string): Promise<Bill[]> => {
 
 export const getBillById = async (id: number): Promise<Bill | null> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return null;
+  
   const result = await db.getFirstAsync<Bill>(
     'SELECT * FROM bills WHERE id = ?',
     [id]
@@ -110,6 +122,8 @@ export const getBillById = async (id: number): Promise<Bill | null> => {
 
 export const createBill = async (bill: Omit<Bill, 'id' | 'created_at'>): Promise<number> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return 1;
+  
   const result = await db.runAsync(
     `INSERT INTO bills (category, total_amount, bill_month, due_date, bill_date, meter_reading, notes, photo_base64, split_type)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -130,6 +144,8 @@ export const createBill = async (bill: Omit<Bill, 'id' | 'created_at'>): Promise
 
 export const createBillAssignment = async (assignment: Omit<BillAssignment, 'id'>): Promise<number> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return 1;
+  
   const result = await db.runAsync(
     `INSERT INTO bill_assignments (bill_id, member_id, assigned_amount, is_paid, paid_date, payment_method)
      VALUES (?, ?, ?, ?, ?, ?)`,
@@ -147,6 +163,8 @@ export const createBillAssignment = async (assignment: Omit<BillAssignment, 'id'
 
 export const getBillAssignments = async (billId: number): Promise<BillAssignment[]> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return [];
+  
   const result = await db.getAllAsync<BillAssignment>(
     'SELECT * FROM bill_assignments WHERE bill_id = ?',
     [billId]
@@ -156,6 +174,8 @@ export const getBillAssignments = async (billId: number): Promise<BillAssignment
 
 export const updateBillAssignment = async (id: number, data: Partial<BillAssignment>): Promise<void> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return;
+  
   const fields: string[] = [];
   const values: any[] = [];
   
@@ -178,6 +198,8 @@ export const updateBillAssignment = async (id: number, data: Partial<BillAssignm
 // MEAL SERVICES
 export const getMealsByDate = async (date: string): Promise<Meal[]> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return [];
+  
   const result = await db.getAllAsync<Meal>(
     'SELECT * FROM meals WHERE meal_date = ?',
     [date]
@@ -187,6 +209,8 @@ export const getMealsByDate = async (date: string): Promise<Meal[]> => {
 
 export const getMealsByMonth = async (month: string): Promise<Meal[]> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return [];
+  
   const result = await db.getAllAsync<Meal>(
     `SELECT * FROM meals WHERE strftime('%Y-%m', meal_date) = ? ORDER BY meal_date DESC`,
     [month]
@@ -196,10 +220,10 @@ export const getMealsByMonth = async (month: string): Promise<Meal[]> => {
 
 export const createOrUpdateMeal = async (meal: Omit<Meal, 'id'>): Promise<number> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return 1;
   
   // Check if meal exists
-  const existing = await db.getFirstAsync<{id: number}>(
-    'SELECT id FROM meals WHERE member_id = ? AND meal_date = ?',
+  const existing = await db.getFirstAsync<{id: number}>( 'SELECT id FROM meals WHERE member_id = ? AND meal_date = ?',
     [meal.member_id, meal.meal_date]
   );
   
@@ -221,6 +245,8 @@ export const createOrUpdateMeal = async (meal: Omit<Meal, 'id'>): Promise<number
 
 export const finalizeMeals = async (date: string, mealRate: number): Promise<void> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return;
+  
   await db.runAsync(
     `UPDATE meals SET is_finalized = 1, meal_rate = ?, total_cost = total_quantity * ? WHERE meal_date = ?`,
     [mealRate, mealRate, date]
@@ -230,6 +256,8 @@ export const finalizeMeals = async (date: string, mealRate: number): Promise<voi
 // DEPOSIT SERVICES
 export const getAllDeposits = async (memberId?: number): Promise<Deposit[]> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return [];
+  
   let query = 'SELECT * FROM deposits ORDER BY deposit_date DESC';
   const params: any[] = [];
   
@@ -244,6 +272,8 @@ export const getAllDeposits = async (memberId?: number): Promise<Deposit[]> => {
 
 export const createDeposit = async (deposit: Omit<Deposit, 'id'>): Promise<number> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return 1;
+  
   const result = await db.runAsync(
     `INSERT INTO deposits (member_id, amount, deposit_date, payment_method, transaction_id, screenshot_base64, notes)
      VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -263,6 +293,8 @@ export const createDeposit = async (deposit: Omit<Deposit, 'id'>): Promise<numbe
 // SHOPPING SERVICES
 export const getAllShopping = async (month?: string): Promise<Shopping[]> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return [];
+  
   let query = 'SELECT * FROM shopping ORDER BY shopping_date DESC';
   const params: any[] = [];
   
@@ -277,6 +309,8 @@ export const getAllShopping = async (month?: string): Promise<Shopping[]> => {
 
 export const createShopping = async (shopping: Omit<Shopping, 'id'>): Promise<number> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return 1;
+  
   const result = await db.runAsync(
     `INSERT INTO shopping (shopping_date, amount, items, receipt_base64, notes, shopper_name)
      VALUES (?, ?, ?, ?, ?, ?)`,
@@ -295,10 +329,11 @@ export const createShopping = async (shopping: Omit<Shopping, 'id'>): Promise<nu
 // ANALYTICS
 export const getCurrentMealRate = async (): Promise<number> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return 0;
+  
   const currentMonth = format(new Date(), 'yyyy-MM');
   
-  const shoppingResult = await db.getFirstAsync<{total: number}>(
-    `SELECT COALESCE(SUM(amount), 0) as total FROM shopping WHERE strftime('%Y-%m', shopping_date) = ?`,
+  const shoppingResult = await db.getFirstAsync<{total: number}>( `SELECT COALESCE(SUM(amount), 0) as total FROM shopping WHERE strftime('%Y-%m', shopping_date) = ?`,
     [currentMonth]
   );
   
@@ -316,6 +351,14 @@ export const getCurrentMealRate = async (): Promise<number> => {
 
 export const getMemberMonthSummary = async (memberId: number, month: string) => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') {
+    return {
+      bills: { total: 0, paid: 0, pending: 0 },
+      meals: { quantity: 0, cost: 0 },
+      deposits: { total: 0 },
+      refundable: 0
+    };
+  }
   
   // Get bills
   const billsResult = await db.getFirstAsync<{total: number, paid: number}>(
