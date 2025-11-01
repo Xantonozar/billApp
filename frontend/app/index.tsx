@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,13 +8,25 @@ export default function SplashScreen() {
   const router = useRouter();
 
   useEffect(() => {
-    // Auto navigate to main app after 2 seconds
+    // Check if running on web
+    if (Platform.OS === 'web') {
+      // Redirect to web notice
+      router.replace('/web-notice');
+      return;
+    }
+
+    // Auto navigate to main app after 2 seconds on mobile
     const timer = setTimeout(() => {
       router.replace('/(tabs)');
     }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
+
+  // Don't show splash on web
+  if (Platform.OS === 'web') {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
