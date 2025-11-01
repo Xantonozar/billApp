@@ -1,10 +1,27 @@
-import { getDatabase } from './init';
+import { Platform } from 'react-native';
 import { Member, Bill, BillAssignment, Meal, Deposit, Shopping } from '../types';
 import { format } from 'date-fns';
+
+// Mock database for web
+const mockDb = {
+  getAllAsync: async () => [],
+  getFirstAsync: async () => null,
+  runAsync: async () => ({ lastInsertRowId: 1, changes: 0 }),
+};
+
+const getDatabase = async () => {
+  if (Platform.OS === 'web') {
+    return mockDb;
+  }
+  const { getDatabase: getDb } = await import('./init');
+  return getDb();
+};
 
 // MEMBER SERVICES
 export const getAllMembers = async (activeOnly: boolean = true): Promise<Member[]> => {
   const db = await getDatabase();
+  if (Platform.OS === 'web') return [];
+  
   const query = activeOnly 
     ? 'SELECT * FROM members WHERE is_active = 1 ORDER BY name'
     : 'SELECT * FROM members ORDER BY name';
