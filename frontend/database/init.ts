@@ -1,10 +1,18 @@
 import * as SQLite from 'expo-sqlite';
+import { Platform } from 'react-native';
 
 const DB_NAME = 'billkhata.db';
 
 let db: SQLite.SQLiteDatabase | null = null;
 
 export const getDatabase = async (): Promise<SQLite.SQLiteDatabase> => {
+  // SQLite doesn't work on web, only on native platforms
+  if (Platform.OS === 'web') {
+    console.warn('SQLite is not supported on web. This app is designed for mobile devices.');
+    // Return a mock database for web preview
+    return {} as SQLite.SQLiteDatabase;
+  }
+  
   if (db) return db;
   
   db = await SQLite.openDatabaseAsync(DB_NAME);
