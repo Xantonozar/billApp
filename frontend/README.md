@@ -1,50 +1,109 @@
-# Welcome to your Expo app 👋
+# BillKhata Manager - Complete Bill & Meal Management App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A comprehensive mobile application for managing shared living expenses, bills, meals, and payments. Designed for Android and iOS using Expo.
 
-## Get started
+## 🎯 Features
 
-1. Install dependencies
+### ✅ Fully Implemented:
+- **Dashboard** with real-time statistics and quick actions
+- **Members Management** - Add, edit, view member details with rent tracking  
+- **Bills Management** - Track all types of bills (Rent, Electricity, Water, Gas, Wi-Fi, Maid, etc.)
+- **Meals Tracking** - Daily meal logging with automatic cost calculation
+- **Deposits Management** - Track meal fund deposits
+- **Shopping Expenses** - Record meal-related shopping
+- **Reports & Analytics** - Monthly summaries and member-wise breakdowns
+- **Local SQLite Database** - All data stored locally on device
+- **Modern Material Design UI** - Beautiful, intuitive interface
+- **Bangla & English Support** - Bilingual interface
 
-   ```bash
-   npm install
-   ```
+## 📱 How to Test the App
 
-2. Start the app
+### ⚠️ Important: This is a **Native Mobile App**
+This app uses SQLite database which only works on native mobile platforms (Android/iOS). The web preview will NOT work.
 
-   ```bash
-   npx expo start
-   ```
+### Testing on Your Phone:
 
-In the output, you'll find options to open the app in a
+1. **Install Expo Go**
+   - Android: [Google Play Store](https://play.google.com/store/apps/details?id=host.exp.exponent)
+   - iOS: [App Store](https://apps.apple.com/app/expo-go/id982107779)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+2. **Scan the QR Code**
+   - Look for the QR code in your terminal/console
+   - Open Expo Go app on your phone
+   - Tap "Scan QR Code"
+   - Point your camera at the QR code
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+3. **App Will Open**
+   - The app will load on your phone
+   - All features will work perfectly
+   - Data is stored locally on your device
 
-## Get a fresh project
+## 🗄️ Database Structure
 
-When you're ready, run:
+The app uses SQLite with the following tables:
+- `members` - Store member information
+- `bills` - Track all bill records
+- `bill_assignments` - Link bills to members with payment status
+- `meals` - Daily meal records
+- `deposits` - Meal fund deposits
+- `shopping` - Shopping expenses
+- `settings` - App settings
 
-```bash
-npm run reset-project
-```
+## 🎨 Design
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- **Modern Material Design** following latest 2025 guidelines
+- **Color Palette:**
+  - Primary: #2563EB (Blue)
+  - Secondary: #10B981 (Green)
+  - Accent: #F59E0B (Amber)
+  - Danger: #EF4444 (Red)
+- **Bottom Navigation** with 5 tabs
+- **Touch-optimized** with 44px+ touch targets
 
-## Learn more
+## 🛠️ Tech Stack
 
-To learn more about developing your project with Expo, look at the following resources:
+- **Framework:** Expo / React Native
+- **Language:** TypeScript
+- **Database:** expo-sqlite (Local SQLite)
+- **Navigation:** expo-router with bottom tabs
+- **State Management:** Zustand
+- **Date Handling:** date-fns
+- **Icons:** @expo/vector-icons (Ionicons)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 🚀 Current Status
 
-## Join the community
+✅ **Phase 1 Complete:** Core architecture and database
+✅ **Phase 2 Complete:** All main screens implemented
+✅ **Phase 3 Complete:** Navigation and basic UI
+🔄 **Next Steps:** Add forms for creating/editing records
 
-Join our community of developers creating universal apps.
+## 📝 Usage Guide
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Adding Members
+1. Go to "Members" tab
+2. Tap the "+" floating button
+3. Fill in member details
+4. Save
+
+### Logging Bills
+1. Go to "Bills" tab
+2. Tap the "+" button
+3. Select bill category
+4. Enter amount and details
+5. Save
+
+### Tracking Meals
+1. Go to "Meals" tab
+2. Select date
+3. Log meals for each member
+4. Finalize meals
+
+## 🔒 Data Privacy
+
+- **100% Offline** - No internet required
+- **Local Storage Only** - All data stays on your device
+- **No Cloud Sync** - Complete data privacy
+
+---
+
+**Made with ❤️ using Expo**
